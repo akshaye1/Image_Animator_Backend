@@ -11,7 +11,7 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 image_routes = Blueprint('image_routes', __name__)
 
-@image_routes.route('/add_border', methods=['POST'])
+@image_routes.route('/add_border', methods=['POST', 'OPTIONS'])
 def process_image():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -19,6 +19,8 @@ def process_image():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
+
+    file_name, file_extension = os.path.splitext(file.filename)
 
     if file:
         input_path = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -29,7 +31,7 @@ def process_image():
         add_torn_stroke_border_with_texture(
     input_path=input_path,
     output_path=output_path,
-    texture_path=r"C:\AKSHAY\Projects\flow-vision-landing-main\flow-vision-landing-main\uploads\crumpled-craft-beige-paper.jpg",
+    texture_path=r"/home/ajinkya-thorat/Downloads/crumpled-craft-beige-paper.jpg",
     border_size=50,
     stroke_width=20,
     roughness=15,
@@ -38,6 +40,9 @@ def process_image():
     shadow_blur=8,
     shadow_opacity=100,
     texture_opacity=130
-)
-        
-        return send_file(output_path, mimetype='image/png')
+)       
+        res_mime_type = 'image/' + file_extension
+        # response = send_file(output_path, as_attachment=True, mimetype='image/png')
+        response = send_file(output_path, as_attachment=True, mimetype=res_mime_type)
+        response.access_control_allow_origin = "*"
+        return response
