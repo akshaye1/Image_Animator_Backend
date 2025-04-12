@@ -4,7 +4,7 @@ import numpy as np
 
 
 
-def add_torn_stroke_border_with_texture(input_path, output_path, texture_path, border_size=50, stroke_width=10, roughness=15, blur_radius=2, shadow_offset=(10, 10), shadow_blur=8, shadow_opacity=100, texture_opacity=150):
+def add_torn_stroke_border_with_texture(input_path, output_path, file_extension, texture_path, border_size=50, stroke_width=10, roughness=15, blur_radius=2, shadow_offset=(10, 10), shadow_blur=8, shadow_opacity=100, texture_opacity=150):
     # Load image and convert to RGBA
     img = Image.open(input_path).convert("RGBA")
     width, height = img.size
@@ -80,8 +80,8 @@ def add_torn_stroke_border_with_texture(input_path, output_path, texture_path, b
     # Composite the texture with the result
     final_result = Image.alpha_composite(final_result, texture_canvas)
     
-    if final_result.mode == "RGBA":
-        final_result = final_result.convert("RGB")
+    # if final_result.mode == "RGBA":
+    #     final_result = final_result.convert("RGB")
 
     # Save the final image
     # final_result.save(output_path.replace(".jpg", ".png"))
