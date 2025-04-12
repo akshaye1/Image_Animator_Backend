@@ -24,13 +24,16 @@ def process_image():
 
     if file:
         input_path = os.path.join(UPLOAD_FOLDER, file.filename)
-        output_path = os.path.join(OUTPUT_FOLDER, f"processed_{file.filename}")
+        temp_file = file_name[:-len(file_extension)] + ".png"
+        print("temp_file", temp_file)
+        output_path = os.path.join(OUTPUT_FOLDER, f"processed_{temp_file}")
         file.save(input_path)
 
         # Run the torn border function
         add_torn_stroke_border_with_texture(
     input_path=input_path,
     output_path=output_path,
+    file_extension=file_extension,
     texture_path=r"/home/ajinkya-thorat/Downloads/crumpled-craft-beige-paper.jpg",
     border_size=50,
     stroke_width=20,
@@ -41,8 +44,11 @@ def process_image():
     shadow_opacity=100,
     texture_opacity=130
 )       
-        res_mime_type = 'image/' + file_extension
-        # response = send_file(output_path, as_attachment=True, mimetype='image/png')
-        response = send_file(output_path, as_attachment=True, mimetype=res_mime_type)
-        response.access_control_allow_origin = "*"
+        """For UI"""
+        # res_mime_type = 'image/' + file_extension
+        # response = send_file(output_path, as_attachment=True, mimetype=res_mime_type)
+        # response.access_control_allow_origin = "*"
+
+        """For postman"""
+        response = send_file(output_path, as_attachment=True, mimetype='image/png')
         return response
